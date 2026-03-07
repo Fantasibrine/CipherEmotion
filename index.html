@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emotion Cipher Pro</title>
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --secondary: #10B981;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1E0A2E, #0A0E17);
+
+            min-height: 100vh;
+            margin: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            padding: 50px 20px;
+
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: #1F2937;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+
+            width: 100%;
+            max-width: 450px;
+
+            height: auto;
+            flex-shrink: 0;
+
+            animation: floatCard 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatCard {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-6px);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #F9FAFB;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #bbbbbb;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        textarea {
+    width: 100%;
+    height: 100px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: 0.3s;
+
+    background-color: #111827;
+    color: #ccc;
+
+    resize: none;
+
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 12px rgba(108, 92, 231, 0.3);
+            transform: scale(1.02);
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            transition: 0.25s;
+        }
+
+        .btn-enc {
+            background-color: #8B5CF6;
+        }
+
+        .btn-dec {
+            background-color: #10B981;
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        button:disabled {
+            background: #000;
+            cursor: not-allowed;
+        }
+
+        .result-area {
+            background-color: #374151;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+            min-height: 60px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .result-area.show {
+            animation: fadeResult 0.5s ease;
+        }
+
+        @keyframes fadeResult {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tag {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #2d3436;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        #status {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 10px;
+            color: #FB7185;
+            font-weight: bold;
+            min-height: 1.2em;
+            transition: opacity 0.3s;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        .emotion-bar {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+            font-size: 0.85rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .emotion-label {
+            width: 80px;
+            font-weight: 600;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 8px;
+            background: #dfe6e9;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 8px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1.2s ease;
+        }
+
+        .percent {
+            width: 35px;
+            text-align: right;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #output {
+            color: #F9FAFB;
+            word-break: break-all;
+            line-height: 1.4;
+            min-height: 50px;
+        }
+
+        #input {
+            color: #ccc;
+            /* word-break: break-all; */
+            line-height: 1.4;
+            min-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>🔐 Emotion Cipher</h2>
+        <p class="subtitle">AI-powered Privacy-Preserving Messaging</p>
+
+        <textarea id="input" wrap="soft" placeholder="Enter message to encrypt OR cipher to decrypt..."></textarea>
+
+        <div id="status"></div>
+
+        <div class="actions">
+            <button id="encBtn" class="btn-enc" onclick="runAIEncryption()">Encrypt</button>
+            <button id="decBtn" class="btn-dec" onclick="runDecryption()">Decrypt</button>
+        </div>
+
+        <div class="result-area">
+            <span class="tag">Output</span>
+            <div id="output">Waiting for input...</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const MODEL_URL = "http://localhost:3000/emotion";
+
+        // store cipher mappings
+        const cipherStore = {};
+
+        function setStatus(msg) {
+
+            const status = document.getElementById('status');
+
+            status.style.opacity = 0;
+
+            setTimeout(() => {
+                status.innerText = msg;
+                status.style.opacity = 1;
+            }, 150);
+
+        }
+
+        // Generate random cipher string
+        function generateCipher(length = 16) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            let cipher = "";
+
+            for (let i = 0; i < length; i++) {
+                cipher += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            return cipher;
+        }
+
+        // AI Logic
+        async function queryAI(text) {
+
+            setStatus("AI is analyzing emotion...");
+
+            const response = await fetch(MODEL_URL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    inputs: text,
+                    options: { wait_for_model: true }
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "API Error");
+            }
+
+            const result = await response.json();
+
+            const emotions = result[0]
+                .map(e => ({
+                    label: e.label.toUpperCase(),
+                    percent: Math.round(e.score * 100)
+                }))
+                .filter(e => e.percent > 0)   // remove 0% emotions
+                .sort((a, b) => b.percent - a.percent);
+
+            return emotions;
+        }
+
+        function typeWriter(element, text, speed = 25) {
+
+            element.innerHTML = "";
+            let i = 0;
+
+            function type() {
+
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+
+            }
+
+            type();
+        }
+
+        // Encryption Logic
+        async function runAIEncryption() {
+            const text = document.getElementById('input').value.trim();
+            if (!text) return alert("Enter text first!");
+                if (cipherStore[text]) {
+        setStatus("This looks like an encrypted cipher. Try Decrypt instead.");
+        return;
+    }
+            try {
+
+                document.getElementById('encBtn').disabled = true;
+
+                const emotions = await queryAI(text);
+
+                const top2 = emotions.slice(0, 2)
+                    .map(e => `${e.label} (${e.percent}%)`)
+                    .join(" + ");
+
+                const cipher = generateCipher(16);
+
+                cipherStore[cipher] = {
+                    message: text,
+                    emotion: top2
+                };
+
+                let barsHTML = "<br><strong>Emotion Redistributions: </strong>";
+
+                emotions.forEach((e, i) => {
+
+                    barsHTML += `
+<div class="emotion-bar">
+<div class="emotion-label">${e.label}</div>
+<div class="bar-container">
+<div class="bar-fill" id="bar${i}"></div>
+</div>
+<div class="percent">${e.percent}%</div>
+</div>
+`;
+
+                });
+
+                const output = document.getElementById("output");
+                const resultArea = document.querySelector(".result-area");
+
+                resultArea.classList.remove("show");
+                void resultArea.offsetWidth;
+                resultArea.classList.add("show");
+
+                output.innerHTML = `
+<strong>Encrypted Text:</strong> <span id="cipherText"></span><br>
+<strong>Top Emotions:</strong> ${top2}
+${barsHTML}
+`;
+
+                typeWriter(document.getElementById("cipherText"), cipher, 150);
+
+                setTimeout(() => {
+
+                    emotions.forEach((e, i) => {
+                        const bar = document.getElementById(`bar${i}`);
+                        if (bar) {
+                            bar.style.width = e.percent + "%";
+                        }
+                    });
+
+                }, 100);
+
+                setStatus("Encryption successful.");
+
+            } catch (error) {
+
+                console.error(error);
+                setStatus("Error: " + error.message);
+
+            } finally {
+
+                document.getElementById('encBtn').disabled = false;
+
+            }
+
+        }
+
+        // Decryption Logic
+        function runDecryption() {
+            const cipher = document.getElementById('input').value.trim();
+
+            if (!cipherStore[cipher]) {
+                alert("Cipher not found. Encrypt first.");
+                return;
+            }
+
+            const data = cipherStore[cipher];
+
+            document.getElementById('output').innerHTML = `
+            <strong>Original Message:</strong> ${data.message}<br>
+            <strong>Top Emotions:</strong> ${data.emotion}
+        `;
+
+            setStatus("Decrypted successfully.");
+        }
+
+        const textarea = document.getElementById("input");
+textarea.addEventListener("input", () => {
+  textarea.style.height = "auto";
+  textarea.style.height = textarea.scrollHeight + "px";
+});
+    </script>
+</body>
+
+</html>
